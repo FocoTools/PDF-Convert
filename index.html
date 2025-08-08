@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Connect PDF Converter - Real PDF Conversion Tool</title>
+    <title>PDF Broker Converter - Real PDF Conversion Tool</title>
     <meta name="description" content="A real, working PDF converter using ConvertAPI. Convert your PDF files to Word, JPG, Excel, HTML, and more online for free.">
     <meta name="keywords" content="PDF converter, free PDF converter, convert PDF, PDF to Word, PDF to JPG, PDF to Excel, online PDF tools, PDF to text, PDF to PowerPoint, free online PDF converter, ConvertAPI">
 
@@ -111,7 +111,7 @@
     
     <header class="header">
         <nav class="container navbar">
-            <a href="#" class="logo">Connect</a>
+            <a href="#" class="logo">PDF Broker Online Tools</a>
         </nav>
     </header>
 
@@ -161,7 +161,7 @@
                         <a href="#" id="downloadLink" class="download-link" download>Download File</a>
                     </div>
                     <p class="disclaimer">
-                        <strong>Powered by ConvertAPI.</strong> Files are securely uploaded for conversion and are not stored permanently. Please insert your API Secret Key in the script to enable functionality.
+                        <strong>Powered by PDF Broker.</strong> Files are securely uploaded for conversion and are not stored permanently. Please insert your API Secret Key in the script to enable functionality.
                     </p>
                 </div>
             </div>
@@ -212,7 +212,7 @@
     <footer class="footer">
         <div class="container">
             <div class="footer-links"><a href="#">Privacy Policy</a><a href="#">Terms of Service</a><a href="#">Contact Us</a></div>
-            <p>&copy; <span id="year"></span> Connect PDF. All Rights Reserved.</p>
+            <p>&copy; <span id="year"></span> PDF Broker. All Rights Reserved.</p>
         </div>
     </footer>
 
@@ -229,13 +229,22 @@
             const downloadLink = document.getElementById('downloadLink');
             const yearSpan = document.getElementById('year');
 
-            // --- গুরুত্বপূর্ণ: CONVERTAPI.COM থেকে আপনার নির্দিষ্ট ফরম্যাটের সিক্রেট কী এখানে যোগ করুন ---
+            // IMPORTANT: Replace these with your actual ConvertAPI secret keys
             const API_SECRETS = {
-                docx: 'https://v2.convertapi.com/convert/pdf/to/docx', // Word (.docx) এর জন্য
-                jpg: 'https://v2.convertapi.com/convert/pdf/to/jpg',   // JPG (.jpg) এর জন্য
-                png: 'https://v2.convertapi.com/convert/pdf/to/png',   // PNG (.png) এর জন্য
-                html: 'https://v2.convertapi.com/convert/pdf/to/html', // HTML (.html) এর জন্য
-                txt: 'https://v2.convertapi.com/convert/pdf/to/txt'    // Text (.txt) এর জন্য
+                docx: 'YOUR_CONVERTAPI_SECRET_KEY_FOR_DOCX', // Replace with your actual secret for PDF to Word
+                jpg: 'YOUR_CONVERTAPI_SECRET_KEY_FOR_JPG',   // Replace with your actual secret for PDF to JPG
+                png: 'YOUR_CONVERTAPI_SECRET_KEY_FOR_PNG',   // Replace with your actual secret for PDF to PNG
+                html: 'YOUR_CONVERTAPI_SECRET_KEY_FOR_HTML', // Replace with your actual secret for PDF to HTML
+                txt: 'YOUR_CONVERTAPI_SECRET_KEY_FOR_TXT'    // Replace with your actual secret for PDF to Text
+            };
+
+            // API endpoints for each conversion type
+            const API_ENDPOINTS = {
+                docx: 'https://v2.convertapi.com/convert/pdf/to/docx',
+                jpg: 'https://v2.convertapi.com/convert/pdf/to/jpg',
+                png: 'https://v2.convertapi.com/convert/pdf/to/png',
+                html: 'https://v2.convertapi.com/convert/pdf/to/html',
+                txt: 'https://v2.convertapi.com/convert/pdf/to/txt'
             };
 
             let uploadedFile = null;
@@ -303,21 +312,20 @@
 
                 const selectedFormat = document.getElementById('convertTo').value;
                 const apiKey = API_SECRETS[selectedFormat];
+                const apiUrl = API_ENDPOINTS[selectedFormat];
 
                 // Check if the API key for the selected format is still the placeholder
-                if (!apiKey || apiKey.toLowerCase().includes('your api key')) {
+                if (!apiKey || apiKey.includes('YOUR_CONVERTAPI_SECRET_KEY')) {
                     alert(`API Secret for ${selectedFormat.toUpperCase()} is not set! Please get your secret key from ConvertAPI.com and add it to the script.`);
                     return;
                 }
 
                 startLoading();
 
-                const apiUrl = `https://v2.convertapi.com/convert/pdf/to/${selectedFormat}?Secret=${apiKey}`;
-
                 const formData = new FormData();
                 formData.append('File', uploadedFile);
 
-                fetch(apiUrl, {
+                fetch(`${apiUrl}?Secret=${apiKey}`, {
                     method: 'POST',
                     body: formData,
                 })
